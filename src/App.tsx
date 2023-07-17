@@ -1,38 +1,67 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import { Stack, Heading, Spinner } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { TodoContext } from "./context/todoContext";
+import TodoCard from "./components/TodoCard";
+import { fetchTodos } from "./api";
+import AddInputTodo from "./components/AddInputTodo";
+
+export const App = () => {
+  const { todos, dispatch } = useContext(TodoContext);
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded) return;
+
+    const fetchAndSetTodos = async () => {
+      try {
+        const fetchedTodos = await fetchTodos();
+        dispatch({ type: "SET_TODO", payload: fetchedTodos });
+        setIsLoaded(true);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchAndSetTodos();
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <Stack justify="center" align="center" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack p={3} h="100vh">
+      <Stack as="nav" align="flex-end">
+        <ColorModeSwitcher />
+      </Stack>
+      <Stack as="main" textAlign="center" fontSize="xl" flex={1}>
+        <Heading as="h1">TODO LIST</Heading>
+        <AddInputTodo />
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          w="100%"
+          overflowX={{ md: "auto" }}
+          py={5}
+          flex={1}
+        >
+          {todos.map((item) => (
+            <TodoCard {...item} key={item.id} />
+          ))}
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+};
