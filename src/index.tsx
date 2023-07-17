@@ -5,6 +5,9 @@ import { ChakraProvider, ColorModeScript, theme } from "@chakra-ui/react";
 import reportWebVitals from "./reportWebVitals";
 import { App } from "./App";
 import { TodoProvider } from "./context/todoContext";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Failed to find the root element");
@@ -12,12 +15,14 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <TodoProvider>
-        <ColorModeScript />
-        <App />
-      </TodoProvider>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <TodoProvider>
+          <ColorModeScript />
+          <App />
+        </TodoProvider>
+      </ChakraProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
 

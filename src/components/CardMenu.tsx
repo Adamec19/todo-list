@@ -1,4 +1,9 @@
-import { AddIcon, DeleteIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  DeleteIcon,
+  HamburgerIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 import {
   IconButton,
   Menu,
@@ -12,12 +17,39 @@ import { FC, useContext } from "react";
 import { TodoContext } from "../context/todoContext";
 import TodoDrawer from "./TodoDrawer";
 import { TodoSection } from "../types";
+import { useMutation, useQueryClient } from "react-query";
+import { deleteSection } from "../api";
 
-type CardMenuProps = TodoSection;
+type CardMenuProps = {
+  triggerFiltersButton: () => void;
+  todo: TodoSection;
+  isViewFilters: boolean;
+};
 
-const CardMenu: FC<CardMenuProps> = ({ id }) => {
+const CardMenu: FC<CardMenuProps> = ({
+  triggerFiltersButton,
+  todo,
+  isViewFilters,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { dispatch } = useContext(TodoContext);
+  // const { dispatch } = useContext(TodoContext);
+  const queryClient = useQueryClient();
+
+  const deleteSectionMutation = useMutation<void, Error>(
+    () => deleteSection(todo.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("sections");
+      },
+      onError: (error) => {
+        console.error("Chyba při mazání sekce:", error);
+      },
+    },
+  );
+
+  const onDeleteSection = () => {
+    deleteSectionMutation.mutate();
+  };
 
   return (
     <Menu>
@@ -33,16 +65,23 @@ const CardMenu: FC<CardMenuProps> = ({ id }) => {
         </MenuItem>
         <MenuItem
           icon={<DeleteIcon />}
-          onClick={() => dispatch({ type: "DELETE_TODO", payload: { id } })}
+          // onClick={() => dispatch({ type: "DELETE_TODO", payload: { id } })}
+          onClick={() => onDeleteSection()}
         >
           Delete todo
+        </MenuItem>
+        <MenuItem
+          icon={<SettingsIcon />}
+          onClick={() => triggerFiltersButton()}
+        >
+          {isViewFilters ? "Hide filters" : "Use filters"}
         </MenuItem>
       </MenuList>
       <TodoDrawer
         isOpen={isOpen}
         onClose={onClose}
         isEdit={false}
-        sectionId={id}
+        sectionId={todo.id}
       />
     </Menu>
   );

@@ -1,34 +1,30 @@
 import { Stack, Heading, Spinner } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import { TodoContext } from "./context/todoContext";
-import TodoCard from "./components/TodoCard";
-import { fetchTodos } from "./api";
+import TodoSectionCard from "./components/TodoSectionCard";
+import { getSections } from "./api";
 import AddInputTodo from "./components/AddInputTodo";
+import { useQuery } from "react-query";
+import { TodoSection } from "./types";
 
 export const App = () => {
-  const { todos, dispatch } = useContext(TodoContext);
+  // const { dispatch, sections } = useContext(TodoContext);
+  const {
+    data: sections,
+    isLoading,
+    error,
+  } = useQuery<TodoSection[] | undefined, Error>("sections", getSections, {
+    // onSuccess: (todos) => {
+    //   const section: TodoSection[] | undefined = todos;
+    //   if (section) {
+    //     dispatch({ type: "SET_TODO", payload: section });
+    //   }
+    // },
+  });
 
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    if (isLoaded) return;
-
-    const fetchAndSetTodos = async () => {
-      try {
-        const fetchedTodos = await fetchTodos();
-        dispatch({ type: "SET_TODO", payload: fetchedTodos });
-        setIsLoaded(true);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    fetchAndSetTodos();
-  }, []);
-
-  if (!isLoaded) {
+  if (isLoading) {
     return (
       <Stack justify="center" align="center" h="100vh">
         <Spinner
@@ -38,6 +34,14 @@ export const App = () => {
           color="blue.500"
           size="xl"
         />
+      </Stack>
+    );
+  }
+
+  if (error) {
+    return (
+      <Stack justify="center" align="center" h="100vh">
+        Error: {error.message}
       </Stack>
     );
   }
@@ -57,8 +61,8 @@ export const App = () => {
           py={5}
           flex={1}
         >
-          {todos.map((item) => (
-            <TodoCard {...item} key={item.id} />
+          {sections?.map((item) => (
+            <TodoSectionCard {...item} key={item.id} />
           ))}
         </Stack>
       </Stack>

@@ -3,12 +3,12 @@ import { Dispatch, createContext, useReducer } from "react";
 import { ChildrenFC, Todo, TodoSection } from "../types";
 
 interface TodoContextType {
-  todos: TodoSection[];
+  sections: TodoSection[];
   dispatch: Dispatch<TodoAction>;
 }
 
 export const TodoContext = createContext<TodoContextType>({
-  todos: [],
+  sections: [],
   dispatch: () => {},
 });
 
@@ -19,11 +19,11 @@ type TodoAction =
   | {
       type: "UPDATE_TODO";
       sectionId: string;
-      updatedTodo: Todo;
+      todo: Todo;
     }
   | { type: "DELETE_TODO"; payload: { id: string } };
 
-const initialTodos: TodoSection[] | null = [];
+const initialSections: TodoSection[] | null = [];
 
 const addTodo = (sections: TodoSection[], sectionId: string, todo: Todo) => {
   const updatedSections = sections.map((section) =>
@@ -65,7 +65,7 @@ const todoReducer = (state: TodoSection[], action: TodoAction) => {
     case "ADD_TODO":
       return addTodo(state, action.sectionId, action.todo);
     case "UPDATE_TODO":
-      return updateTodo(state, action.sectionId, action.updatedTodo);
+      return updateTodo(state, action.sectionId, action.todo);
     case "DELETE_TODO":
       return state.filter((todo) => todo.id !== action.payload.id);
     default:
@@ -74,10 +74,10 @@ const todoReducer = (state: TodoSection[], action: TodoAction) => {
 };
 
 export const TodoProvider: ChildrenFC = ({ children }) => {
-  const [todos, dispatch] = useReducer(todoReducer, initialTodos);
+  const [sections, dispatch] = useReducer(todoReducer, initialSections);
 
   return (
-    <TodoContext.Provider value={{ todos, dispatch }}>
+    <TodoContext.Provider value={{ sections, dispatch }}>
       {children}
     </TodoContext.Provider>
   );

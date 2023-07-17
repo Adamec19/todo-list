@@ -9,21 +9,24 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { EditIcon } from "@chakra-ui/icons";
 
-import { Todo } from "../types";
+import { Todo, TodoSection } from "../types";
 import TodoDrawer from "./TodoDrawer";
 import { timestampToDateAndMonth } from "../helper";
+import { useMutation, useQueryClient } from "react-query";
+import { updateTodoInSection } from "../api";
 
 type TodoItemProps = {
-  sectionID: string;
+  sectionId: string;
   todo: Todo;
 };
 
-const TodoItem: FC<TodoItemProps> = ({ sectionID, todo }) => {
+const TodoItem: FC<TodoItemProps> = ({ sectionId, todo }) => {
   const [isCheck, setIsCheck] = useState(todo.isDone);
 
+  const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getBgColor = () => {
@@ -37,6 +40,24 @@ const TodoItem: FC<TodoItemProps> = ({ sectionID, todo }) => {
     }
   };
 
+  const updateTodoMutation = useMutation<TodoSection, Error, Todo>(
+    (todo: Todo) => updateTodoInSection(sectionId, todo),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("sections");
+        queryClient.refetchQueries("sections");
+      },
+      onError: (error) => {
+        console.error("Chyba při aktualizaci úkolu:", error);
+      },
+    },
+  );
+
+  const handleOpenDrawer = () => {
+    queryClient.refetchQueries("sections");
+    onOpen();
+  };
+
   return (
     <ListItem
       display="flex"
@@ -45,8 +66,15 @@ const TodoItem: FC<TodoItemProps> = ({ sectionID, todo }) => {
       borderRadius="6px"
       position="relative"
       backgroundColor={"transparent"}
+      opacity={isCheck ? 0.5 : 1}
     >
-      <Checkbox isChecked={isCheck} onChange={() => setIsCheck(!isCheck)} />
+      <Checkbox
+        isChecked={isCheck}
+        onChange={() => {
+          updateTodoMutation.mutate({ ...todo, isDone: !isCheck });
+          setIsCheck(!isCheck);
+        }}
+      />
       <Stack textAlign="left" flex={1} ml={2} spacing={0} pt={2}>
         <Heading as="h3" fontSize="22px">
           {todo.name}
@@ -69,14 +97,14 @@ const TodoItem: FC<TodoItemProps> = ({ sectionID, todo }) => {
       <IconButton
         aria-label="Search database"
         icon={<EditIcon />}
-        onClick={() => onOpen()}
+        onClick={() => handleOpenDrawer()}
       />
       <TodoDrawer
         isOpen={isOpen}
         onClose={onClose}
         todo={todo}
         isEdit={true}
-        sectionId={sectionID}
+        sectionId={sectionId}
       />
     </ListItem>
   );

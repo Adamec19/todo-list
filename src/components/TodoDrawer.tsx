@@ -22,13 +22,15 @@ import { v4 as uuidv4 } from "uuid";
 
 import "react-datepicker/dist/react-datepicker.css";
 import useViewport from "../hooks/useViewport";
-import { Todo } from "../types";
+import { Priority, Todo, TodoSection } from "../types";
 import { TodoContext } from "../context/todoContext";
 import { InferType, ObjectSchema, date, object, string } from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import { dateObjectToTimestamp, timestampToDateObject } from "../helper";
+import { useMutation, useQueryClient } from "react-query";
+import { addTodoToSection, updateTodoInSection } from "../api";
 
 type TodoDrawerProps = {
   isOpen: boolean;
@@ -37,8 +39,6 @@ type TodoDrawerProps = {
   isEdit: boolean;
   sectionId: string;
 };
-
-type Priority = "High" | "Medium" | "Low";
 
 type FormType = {
   name: string;
@@ -60,6 +60,8 @@ const schema: ObjectSchema<FormType> = object({
 
 type FormValues = InferType<typeof schema>;
 
+const arrayPriority = ["High", "Medium", "Low"];
+
 const getDeadLine = (deadline: number | undefined) => {
   if (!deadline) {
     return null;
@@ -80,6 +82,32 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
 
   const { isMobile } = useViewport();
   const { dispatch } = useContext(TodoContext);
+  const queryClient = useQueryClient();
+
+  const addTodoMutation = useMutation<TodoSection, Error, Todo>(
+    (todo: Todo) => addTodoToSection(sectionId, todo),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("sections");
+      },
+      onError: (error) => {
+        console.error("Chyba při přidávání úkolu do sekce:", error);
+      },
+    },
+  );
+
+  const updateTodoMutation = useMutation<TodoSection, Error, Todo>(
+    (todo: Todo) => updateTodoInSection(sectionId, todo),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries("sections");
+      },
+      onError: (error) => {
+        console.error("Chyba při aktualizaci úkolu:", error);
+      },
+    },
+  );
+
   const {
     handleSubmit,
     register,
@@ -102,31 +130,24 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
     onClose();
     reset();
     clearErrors();
-    if (isEdit && todo) {
-      dispatch({
-        type: "UPDATE_TODO",
-        sectionId,
-        updatedTodo: {
-          ...todo,
-          deadline: dateObjectToTimestamp(data.deadLine) ?? 11111,
-          description: data.description,
-          name: data.name,
-          priority: { id: 1, value: data.priority },
-        },
-      });
+
+    const updatedTodo: Todo = {
+      id: todo?.id ?? uuidv4(),
+      deadline: dateObjectToTimestamp(data.deadLine) ?? 1111,
+      description: data.description,
+      isDone: false,
+      name: data.name,
+      priority: { id: 1, value: data.priority },
+    };
+    // dispatch({
+    //   type: isEdit ? "UPDATE_TODO" : "ADD_TODO",
+    //   sectionId,
+    //   todo: updatedTodo,
+    // });
+    if (!isEdit) {
+      addTodoMutation.mutate(updatedTodo);
     } else {
-      dispatch({
-        type: "ADD_TODO",
-        sectionId,
-        todo: {
-          id: uuidv4(),
-          name: data.name,
-          description: data.description,
-          isDone: false,
-          priority: { id: 1, value: data.priority },
-          deadline: dateObjectToTimestamp(data.deadLine) ?? 11111,
-        },
-      });
+      updateTodoMutation.mutate(updatedTodo);
     }
     setDateValue(null);
   };
@@ -170,7 +191,7 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
               <Box>
                 <RadioGroup value={watchRadio}>
                   <Stack direction="row">
-                    {["High", "Medium", "Low"].map((item, index) => (
+                    {arrayPriority.map((item, index) => (
                       <Radio value={item} key={index} {...register("priority")}>
                         {item}
                       </Radio>

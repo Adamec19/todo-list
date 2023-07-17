@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-type Priority = "High" | "Medium" | "Low";
+export type Priority = "High" | "Medium" | "Low";
 
 export type TodoSection = {
   id: string;
