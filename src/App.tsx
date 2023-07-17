@@ -1,8 +1,7 @@
 import { Stack, Heading, Spinner } from "@chakra-ui/react";
-import { useContext } from "react";
 
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { TodoContext } from "./context/todoContext";
+// import { TodoContext } from "./context/todoContext";
 import TodoSectionCard from "./components/TodoSectionCard";
 import { getSections } from "./api";
 import AddInputTodo from "./components/AddInputTodo";

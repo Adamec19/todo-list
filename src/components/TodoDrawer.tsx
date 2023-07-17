@@ -16,14 +16,14 @@ import {
   Textarea,
   Text,
 } from "@chakra-ui/react";
-import { FC, useContext, useState } from "react";
+import { FC, useState } from "react";
 import DatePicker from "react-datepicker";
 import { v4 as uuidv4 } from "uuid";
 
 import "react-datepicker/dist/react-datepicker.css";
 import useViewport from "../hooks/useViewport";
 import { Priority, Todo, TodoSection } from "../types";
-import { TodoContext } from "../context/todoContext";
+// import { TodoContext } from "../context/todoContext";
 import { InferType, ObjectSchema, date, object, string } from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -81,7 +81,7 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
   );
 
   const { isMobile } = useViewport();
-  const { dispatch } = useContext(TodoContext);
+  // const { dispatch } = useContext(TodoContext);
   const queryClient = useQueryClient();
 
   const addTodoMutation = useMutation<TodoSection, Error, Todo>(

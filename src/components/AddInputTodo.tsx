@@ -5,17 +5,17 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  useQuery,
+  // useQuery,
 } from "@chakra-ui/react";
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { object, string, InferType, ObjectSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { TodoContext } from "../context/todoContext";
-import { TodoSection } from "../types";
+// import { TodoContext } from "../context/todoContext";
+// import { TodoSection } from "../types";
 import { createNewSection } from "../api";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -30,7 +30,7 @@ const schema: ObjectSchema<FormType> = object({
 type FormValues = InferType<typeof schema>;
 
 const AddInputTodo: FC = () => {
-  const { dispatch } = useContext(TodoContext);
+  // const { dispatch } = useContext(TodoContext);
   const queryClient = useQueryClient();
   const {
     handleSubmit,

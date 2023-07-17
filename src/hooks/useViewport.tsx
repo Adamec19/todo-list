@@ -2,9 +2,7 @@ import { useMediaQuery } from "@chakra-ui/react";
 
 export interface IViewportContextValue {
   isMobile: boolean;
-  // isTablet: boolean;
   isDesktop: boolean;
-  // isLargerThanDesktop: boolean;
 }
 
 export default function useViewport(): IViewportContextValue {
@@ -13,8 +11,6 @@ export default function useViewport(): IViewportContextValue {
 
   return {
     isMobile: isMobile || false,
-    // isTablet: isTablet || false,
     isDesktop: isDesktop || false,
-    // isLargerThanDesktop: isLargerThanDesktop || false,
   };
 }

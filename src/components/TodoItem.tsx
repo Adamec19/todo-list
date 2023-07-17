@@ -9,7 +9,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { EditIcon } from "@chakra-ui/icons";
 
 import { Todo, TodoSection } from "../types";
@@ -43,7 +43,7 @@ const TodoItem: FC<TodoItemProps> = ({ sectionId, todo }) => {
   const updateTodoMutation = useMutation<TodoSection, Error, Todo>(
     (todo: Todo) => updateTodoInSection(sectionId, todo),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries("sections");
         queryClient.refetchQueries("sections");
       },

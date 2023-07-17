@@ -12,9 +12,9 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FC, useContext } from "react";
+import { FC } from "react";
 
-import { TodoContext } from "../context/todoContext";
+// import { TodoContext } from "../context/todoContext";
 import TodoDrawer from "./TodoDrawer";
 import { TodoSection } from "../types";
 import { useMutation, useQueryClient } from "react-query";
