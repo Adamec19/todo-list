@@ -14,17 +14,21 @@ import { EditIcon } from "@chakra-ui/icons";
 
 import { Todo } from "../types";
 import TodoDrawer from "./TodoDrawer";
+import { timestampToDateAndMonth } from "../helper";
 
-type TodoItemProps = Todo;
+type TodoItemProps = {
+  sectionID: string;
+  todo: Todo;
+};
 
-const TodoItem: FC<TodoItemProps> = (props) => {
-  const [isCheck, setIsCheck] = useState(props.isDone);
+const TodoItem: FC<TodoItemProps> = ({ sectionID, todo }) => {
+  const [isCheck, setIsCheck] = useState(todo.isDone);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getBgColor = () => {
-    switch (props.priority) {
-      case "Hight":
+    switch (todo.priority.value) {
+      case "High":
         return "red";
       case "Medium":
         return "blue";
@@ -45,12 +49,14 @@ const TodoItem: FC<TodoItemProps> = (props) => {
       <Checkbox isChecked={isCheck} onChange={() => setIsCheck(!isCheck)} />
       <Stack textAlign="left" flex={1} ml={2} spacing={0} pt={2}>
         <Heading as="h3" fontSize="22px">
-          {props.title}
+          {todo.name}
         </Heading>
         <Text pt="6px" pb="12px">
-          {props.text}
+          {todo.description}
         </Text>
-        <Text fontSize="12px">Deadline: {props.deadline}</Text>
+        <Text fontSize="12px">
+          Deadline: {timestampToDateAndMonth(todo.deadline)}
+        </Text>
       </Stack>
       <Tag
         position="absolute"
@@ -58,7 +64,7 @@ const TodoItem: FC<TodoItemProps> = (props) => {
         top="-10px"
         backgroundColor={getBgColor()}
       >
-        {props.priority}
+        {todo.priority.value ? todo.priority.value : "Low"}
       </Tag>
       <IconButton
         aria-label="Search database"
@@ -68,8 +74,9 @@ const TodoItem: FC<TodoItemProps> = (props) => {
       <TodoDrawer
         isOpen={isOpen}
         onClose={onClose}
-        onOpen={onOpen}
-        todo={props}
+        todo={todo}
+        isEdit={true}
+        sectionId={sectionID}
       />
     </ListItem>
   );

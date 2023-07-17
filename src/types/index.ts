@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-type Priority = "Hight" | "Medium" | "Low";
+type Priority = "High" | "Medium" | "Low";
 
 export type TodoSection = {
   id: string;
@@ -10,11 +10,11 @@ export type TodoSection = {
 
 export type Todo = {
   id: string;
-  text: string;
-  title: string;
+  name: string;
+  description: string;
   isDone: boolean;
-  priority: Priority;
-  deadline: string;
+  priority: { id: number; value: Priority };
+  deadline: number;
 };
 
 export type ChildrenFC<T = unknown> = React.FC<T & { children: ReactNode }>;

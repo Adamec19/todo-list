@@ -18,7 +18,7 @@ const TodoCard: FC<TodoCardProps> = (props) => {
       </Stack>
       <List spacing={3.5}>
         {props.todosList.map((item) => (
-          <TodoItem {...item} key={item.id} />
+          <TodoItem todo={item} key={item.id} sectionID={props.id} />
         ))}
       </List>
     </Card>

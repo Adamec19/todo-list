@@ -1,4 +1,4 @@
-import { AddIcon, DeleteIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   IconButton,
   Menu,
@@ -15,7 +15,7 @@ import { TodoSection } from "../types";
 
 type CardMenuProps = TodoSection;
 
-const CardMenu: FC<CardMenuProps> = ({ id, title, todosList }) => {
+const CardMenu: FC<CardMenuProps> = ({ id }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { dispatch } = useContext(TodoContext);
 
@@ -30,9 +30,6 @@ const CardMenu: FC<CardMenuProps> = ({ id, title, todosList }) => {
       <MenuList>
         <MenuItem icon={<AddIcon />} onClick={onOpen}>
           Add todo
-        </MenuItem>{" "}
-        <MenuItem icon={<EditIcon />} onClick={onOpen}>
-          Edit todo
         </MenuItem>
         <MenuItem
           icon={<DeleteIcon />}
@@ -41,7 +38,12 @@ const CardMenu: FC<CardMenuProps> = ({ id, title, todosList }) => {
           Delete todo
         </MenuItem>
       </MenuList>
-      <TodoDrawer isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
+      <TodoDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        isEdit={false}
+        sectionId={id}
+      />
     </Menu>
   );
 };

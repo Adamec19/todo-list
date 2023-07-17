@@ -39,7 +39,7 @@ const AddInputTodo: FC = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     dispatch({
-      type: "ADD_TODO",
+      type: "ADD_SECTION",
       payload: { id: uuidv4(), title: data.title, todosList: [] },
     });
     reset();
