@@ -23,7 +23,6 @@ import { v4 as uuidv4 } from "uuid";
 import "react-datepicker/dist/react-datepicker.css";
 import useViewport from "../hooks/useViewport";
 import { Priority, Todo, TodoSection } from "../types";
-// import { TodoContext } from "../context/todoContext";
 import { InferType, ObjectSchema, date, object, string } from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -81,7 +80,6 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
   );
 
   const { isMobile } = useViewport();
-  // const { dispatch } = useContext(TodoContext);
   const queryClient = useQueryClient();
 
   const addTodoMutation = useMutation<TodoSection, Error, Todo>(
@@ -139,11 +137,6 @@ const TodoDrawer: FC<TodoDrawerProps> = ({
       name: data.name,
       priority: { id: 1, value: data.priority },
     };
-    // dispatch({
-    //   type: isEdit ? "UPDATE_TODO" : "ADD_TODO",
-    //   sectionId,
-    //   todo: updatedTodo,
-    // });
     if (!isEdit) {
       addTodoMutation.mutate(updatedTodo);
     } else {

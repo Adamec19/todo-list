@@ -5,7 +5,6 @@ import {
   InputGroup,
   InputRightElement,
   Text,
-  // useQuery,
 } from "@chakra-ui/react";
 import { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -14,8 +13,6 @@ import { ErrorMessage } from "@hookform/error-message";
 import { object, string, InferType, ObjectSchema } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-// import { TodoContext } from "../context/todoContext";
-// import { TodoSection } from "../types";
 import { createNewSection } from "../api";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -30,7 +27,6 @@ const schema: ObjectSchema<FormType> = object({
 type FormValues = InferType<typeof schema>;
 
 const AddInputTodo: FC = () => {
-  // const { dispatch } = useContext(TodoContext);
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -52,10 +48,6 @@ const AddInputTodo: FC = () => {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     try {
-      // dispatch({
-      //   type: "ADD_SECTION",
-      //   payload: { id: uuidv4(), title: data.title, todosList: [] },
-      // });
       createSectionMutation.mutate({
         id: uuidv4(),
         title: data.title,

@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { FC } from "react";
 
-// import { TodoContext } from "../context/todoContext";
 import TodoDrawer from "./TodoDrawer";
 import { TodoSection } from "../types";
 import { useMutation, useQueryClient } from "react-query";
@@ -32,7 +31,6 @@ const CardMenu: FC<CardMenuProps> = ({
   isViewFilters,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const { dispatch } = useContext(TodoContext);
   const queryClient = useQueryClient();
 
   const deleteSectionMutation = useMutation<void, Error>(
@@ -63,11 +61,7 @@ const CardMenu: FC<CardMenuProps> = ({
         <MenuItem icon={<AddIcon />} onClick={onOpen}>
           Add todo
         </MenuItem>
-        <MenuItem
-          icon={<DeleteIcon />}
-          // onClick={() => dispatch({ type: "DELETE_TODO", payload: { id } })}
-          onClick={() => onDeleteSection()}
-        >
+        <MenuItem icon={<DeleteIcon />} onClick={() => onDeleteSection()}>
           Delete todo
         </MenuItem>
         <MenuItem

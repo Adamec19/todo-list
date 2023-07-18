@@ -1,7 +1,5 @@
 import { Stack, Heading, Spinner } from "@chakra-ui/react";
 
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
-// import { TodoContext } from "./context/todoContext";
 import TodoSectionCard from "./components/TodoSectionCard";
 import { getSections } from "./api";
 import AddInputTodo from "./components/AddInputTodo";
@@ -9,19 +7,11 @@ import { useQuery } from "react-query";
 import { TodoSection } from "./types";
 
 export const App = () => {
-  // const { dispatch, sections } = useContext(TodoContext);
   const {
     data: sections,
     isLoading,
     error,
-  } = useQuery<TodoSection[] | undefined, Error>("sections", getSections, {
-    // onSuccess: (todos) => {
-    //   const section: TodoSection[] | undefined = todos;
-    //   if (section) {
-    //     dispatch({ type: "SET_TODO", payload: section });
-    //   }
-    // },
-  });
+  } = useQuery<TodoSection[] | undefined, Error>("sections", getSections, {});
 
   if (isLoading) {
     return (
@@ -47,9 +37,6 @@ export const App = () => {
 
   return (
     <Stack p={3} h="100vh">
-      <Stack as="nav" align="flex-end">
-        <ColorModeSwitcher />
-      </Stack>
       <Stack as="main" textAlign="center" fontSize="xl" flex={1}>
         <Heading as="h1">TODO LIST</Heading>
         <AddInputTodo />
