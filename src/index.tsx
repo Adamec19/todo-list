@@ -1,11 +1,12 @@
 import React from "react";
 import * as ReactDOM from "react-dom/client";
 import * as serviceWorker from "./serviceWorker";
-import { ChakraProvider, ColorModeScript, theme } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import reportWebVitals from "./reportWebVitals";
 import { App } from "./App";
 import { TodoProvider } from "./context/todoContext";
 import { QueryClient, QueryClientProvider } from "react-query";
+import theme from "./theme";
 
 const queryClient = new QueryClient();
 
