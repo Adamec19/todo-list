@@ -19,13 +19,13 @@ import { TodoSection } from "../types";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteSection } from "../api";
 
-type CardMenuProps = {
+type SectionActionMenuProps = {
   triggerFiltersButton: () => void;
   todo: TodoSection;
   isViewFilters: boolean;
 };
 
-const CardMenu: FC<CardMenuProps> = ({
+const SectionActionMenu: FC<SectionActionMenuProps> = ({
   triggerFiltersButton,
   todo,
   isViewFilters,
@@ -80,4 +80,4 @@ const CardMenu: FC<CardMenuProps> = ({
     </Menu>
   );
 };
-export default CardMenu;
+export default SectionActionMenu;

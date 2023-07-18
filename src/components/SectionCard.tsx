@@ -1,11 +1,11 @@
 import { Card, Heading, List, Select, Stack, Text } from "@chakra-ui/react";
 import { FC, useState } from "react";
 
-import TodoItem from "./TodoItem";
+import TodoCard from "./TodoCard";
 import { Priority, Todo, TodoSection } from "../types";
-import CardMenu from "./CardMenu";
+import SectionActionMenu from "./SectionActionMenu";
 
-type TodoCardProps = TodoSection;
+type SectionCardProps = TodoSection;
 
 const arrayPriority = [
   { id: 1, value: "High" },
@@ -13,7 +13,7 @@ const arrayPriority = [
   { id: 3, value: "Low" },
 ];
 
-const TodoSectionCard: FC<TodoCardProps> = (props) => {
+const SectionCard: FC<SectionCardProps> = (props) => {
   const [filteringPriority, setFilteringPriority] = useState<Priority | "">("");
   const [sortingPriority, setSortingPriority] = useState<
     "Highest priority" | "Lowest priority" | ""
@@ -51,7 +51,7 @@ const TodoSectionCard: FC<TodoCardProps> = (props) => {
       <Stack direction="row" justify="space-between">
         <Heading as="h2">{props.title}</Heading>
         <Stack direction="row" align="center" spacing={0}>
-          <CardMenu
+          <SectionActionMenu
             todo={props}
             triggerFiltersButton={() => setIsViewFilters(!isViewFilters)}
             isViewFilters={isViewFilters}
@@ -98,10 +98,10 @@ const TodoSectionCard: FC<TodoCardProps> = (props) => {
               todo.priority.value === filteringPriority,
           )
           .map((item) => (
-            <TodoItem todo={item} key={item.id} sectionId={props.id} />
+            <TodoCard todo={item} key={item.id} sectionId={props.id} />
           ))}
       </List>
     </Card>
   );
 };
-export default TodoSectionCard;
+export default SectionCard;

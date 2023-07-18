@@ -26,7 +26,7 @@ const schema: ObjectSchema<FormType> = object({
 
 type FormValues = InferType<typeof schema>;
 
-const AddInputTodo: FC = () => {
+const AddInputSection: FC = () => {
   const queryClient = useQueryClient();
   const {
     handleSubmit,
@@ -88,4 +88,4 @@ const AddInputTodo: FC = () => {
   );
 };
 
-export default AddInputTodo;
+export default AddInputSection;

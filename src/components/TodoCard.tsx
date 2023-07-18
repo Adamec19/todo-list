@@ -18,12 +18,12 @@ import { timestampToDateAndMonth } from "../helper";
 import { useMutation, useQueryClient } from "react-query";
 import { updateTodoInSection } from "../api";
 
-type TodoItemProps = {
+type TodoCardProps = {
   sectionId: string;
   todo: Todo;
 };
 
-const TodoItem: FC<TodoItemProps> = ({ sectionId, todo }) => {
+const TodoCard: FC<TodoCardProps> = ({ sectionId, todo }) => {
   const [isCheck, setIsCheck] = useState(todo.isDone);
 
   const queryClient = useQueryClient();
@@ -109,4 +109,4 @@ const TodoItem: FC<TodoItemProps> = ({ sectionId, todo }) => {
     </ListItem>
   );
 };
-export default TodoItem;
+export default TodoCard;
