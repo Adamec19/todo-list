@@ -99,13 +99,15 @@ const TodoCard: FC<TodoCardProps> = ({ sectionId, todo }) => {
         icon={<EditIcon />}
         onClick={() => handleOpenDrawer()}
       />
-      <TodoDrawer
-        isOpen={isOpen}
-        onClose={onClose}
-        todo={todo}
-        isEdit={true}
-        sectionId={sectionId}
-      />
+      {isOpen && (
+        <TodoDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          todo={todo}
+          isEdit={true}
+          sectionId={sectionId}
+        />
+      )}
     </ListItem>
   );
 };
