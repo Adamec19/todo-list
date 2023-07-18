@@ -19,7 +19,6 @@ root.render(
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <TodoProvider>
-          <ColorModeScript />
           <App />
         </TodoProvider>
       </ChakraProvider>
